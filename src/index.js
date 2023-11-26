@@ -24,13 +24,13 @@ function handleForm(e) {
   lastValue = inputValue;
   page = 1;
   loadMoreBtnRef.style.display = 'none';
-  typeOnForm(inputValue, page);
+  performSearch(inputValue, page);
 }
 
 function handleBtnLoadMore() {
   page += 1;
   loadMoreBtnRef.style.display = 'none';
-  loadMoreBtn(lastValue, page);
+  loadMoreImages(lastValue, page);
 }
 
 function slowScroll() {
@@ -43,7 +43,7 @@ function slowScroll() {
   });
 }
 
-function typeOnForm(inputValue, page) {
+function performSearch(inputValue, page) {
   try {
     fetchService(inputValue, page).then(({ hits, totalHits }) => {
       if (hits.length === 0 || !inputValue) {
@@ -62,22 +62,21 @@ function typeOnForm(inputValue, page) {
   }
 }
 
-function loadMoreBtn(lastValue, page) {
+function loadMoreImages(lastValue, page) {
   try {
     fetchService(lastValue, page).then(({ hits, totalHits }) => {
-    galleryRef.insertAdjacentHTML('beforeend', markup(hits));
+      galleryRef.insertAdjacentHTML('beforeend', markup(hits));
 
-    if (galleryRef.children.length >= totalHits) {
-      loadMoreBtnRef.style.display = 'none';
-      Notify.warning(END_RESULTS);
-    } else {
-      loadMoreBtnRef.style.display = 'block';
-    }
-    lightbox.refresh();
-    slowScroll();
-  });
+      if (galleryRef.children.length >= totalHits) {
+        loadMoreBtnRef.style.display = 'none';
+        Notify.warning(END_RESULTS);
+      } else {
+        loadMoreBtnRef.style.display = 'block';
+      }
+      lightbox.refresh();
+      slowScroll();
+    });
   } catch (error) {
     console.log(error.message);
   }
-  
 }
