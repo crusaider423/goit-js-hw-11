@@ -18,6 +18,7 @@ export async function fetchService(value, page) {
 
   const { data } = await axios.get(BASE_URL, options);
   return data;
+console.log(data);
 }
 
 // return axios.get(BASE_URL, options).then(({ data }) => data);

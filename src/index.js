@@ -44,8 +44,8 @@ function slowScroll() {
 }
 
 function performSearch(inputValue, page) {
-  try {
-    fetchService(inputValue, page).then(({ hits, totalHits }) => {
+  fetchService(inputValue, page)
+    .then(({ hits, totalHits }) => {
       if (hits.length === 0 || !inputValue) {
         galleryRef.innerHTML = '';
         Notify.failure(FAIL);
@@ -56,15 +56,13 @@ function performSearch(inputValue, page) {
       Notify.success(`Hooray! We found ${totalHits} images.`);
       loadMoreBtnRef.style.display = 'block';
       lightbox.refresh();
-    });
-  } catch (error) {
-    console.log(error.message);
-  }
+    })
+    .catch(er => console.log(er.message));
 }
 
 function loadMoreImages(lastValue, page) {
-  try {
-    fetchService(lastValue, page).then(({ hits, totalHits }) => {
+  fetchService(lastValue, page)
+    .then(({ hits, totalHits }) => {
       galleryRef.insertAdjacentHTML('beforeend', markup(hits));
 
       if (galleryRef.children.length >= totalHits) {
@@ -75,8 +73,6 @@ function loadMoreImages(lastValue, page) {
       }
       lightbox.refresh();
       slowScroll();
-    });
-  } catch (error) {
-    console.log(error.message);
-  }
+    })
+    .catch(er => console.log(er.message));
 }
