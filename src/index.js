@@ -23,7 +23,7 @@ function handleForm(e) {
   const inputValue = e.target.elements.searchQuery.value.trim();
   lastValue = inputValue;
   page = 1;
-  loadMoreBtnRef.style.display = 'none';
+  if (!inputValue) return;
   performSearch(inputValue, page);
 }
 
@@ -46,7 +46,7 @@ function slowScroll() {
 function performSearch(inputValue, page) {
   fetchService(inputValue, page)
     .then(({ hits, totalHits }) => {
-      if (hits.length === 0 || !inputValue) {
+      if (hits.length === 0) {
         galleryRef.innerHTML = '';
         Notify.failure(FAIL);
         return;
