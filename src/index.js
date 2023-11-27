@@ -43,36 +43,39 @@ function slowScroll() {
   });
 }
 
-function performSearch(inputValue, page) {
-  fetchService(inputValue, page)
-    .then(({ hits, totalHits }) => {
-      if (hits.length === 0) {
-        galleryRef.innerHTML = '';
-        Notify.failure(FAIL);
-        return;
-      }
+async function performSearch(inputValue, page) {
+  try {
+    const { hits, totalHits } = await fetchService(inputValue, page);
 
-      galleryRef.innerHTML = markup(hits);
-      Notify.success(`Hooray! We found ${totalHits} images.`);
-      loadMoreBtnRef.style.display = 'block';
-      lightbox.refresh();
-    })
-    .catch(er => console.log(er.message));
+    if (hits.length === 0) {
+      galleryRef.innerHTML = '';
+      Notify.failure(FAIL);
+      return;
+    }
+
+    galleryRef.innerHTML = markup(hits);
+    Notify.success(`Hooray! We found ${totalHits} images.`);
+    loadMoreBtnRef.style.display = 'block';
+    lightbox.refresh();
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
-function loadMoreImages(lastValue, page) {
-  fetchService(lastValue, page)
-    .then(({ hits, totalHits }) => {
-      galleryRef.insertAdjacentHTML('beforeend', markup(hits));
+async function loadMoreImages(lastValue, page) {
+  try {
+    const { hits, totalHits } = await fetchService(lastValue, page);
+    galleryRef.insertAdjacentHTML('beforeend', markup(hits));
 
-      if (galleryRef.children.length >= totalHits) {
-        loadMoreBtnRef.style.display = 'none';
-        Notify.warning(END_RESULTS);
-      } else {
-        loadMoreBtnRef.style.display = 'block';
-      }
-      lightbox.refresh();
-      slowScroll();
-    })
-    .catch(er => console.log(er.message));
+    if (galleryRef.children.length >= totalHits) {
+      loadMoreBtnRef.style.display = 'none';
+      Notify.warning(END_RESULTS);
+    } else {
+      loadMoreBtnRef.style.display = 'block';
+    }
+    lightbox.refresh();
+    slowScroll();
+  } catch (error) {
+    console.log(console.log(error.message));
+  }
 }
